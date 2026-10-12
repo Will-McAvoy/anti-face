@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>Anti Face 迷你状态</title>
+  <style>
+    body {
+      margin: 0;
+      font: 13px "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: #162018;
+      color: #e6ebe3;
+      user-select: none;
+    }
+    header {
+      padding: 10px 14px 4px;
+      -webkit-app-region: drag;
+      cursor: move;
+    }
+    main {
+      padding: 4px 14px 12px;
+      -webkit-app-region: no-drag;
+    }
+    h1 {
+      font-size: 13px;
+      margin: 0 0 6px;
+      font-weight: 600;
+      color: #c5dba8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drag-hint {
+      font-size: 10px;
+      color: #8b978d;
+      font-weight: normal;
+    }
+    p { margin: 0 0 5px; color: #b7c4b6; font-size: 12px; }
+    .muted { color: #8b978d; font-size: 11px; }
+    .row { display: flex; gap: 8px; margin-top: 10px; }
+    button {
+      font: inherit;
+      color: #26311f;
+      background: #c5dba8;
+      border: 0;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+    }
+    button.secondary {
+      color: #d5e0d4;
+      background: transparent;
+      border: 1px solid #ffffff22;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title"><span>迷你状态</span> <span class="drag-hint">按住拖动</span></h1>
+  </header>
+  <main>
+    <p id="host">正在读取状态…</p>
+    <p id="phase"></p>
+    <p id="duration"></p>
+    <p id="tokens"></p>
+    <p id="fresh" class="muted"></p>
+    <div class="row">
+      <button id="open" type="button">打开主窗口</button>
+      <button id="close" class="secondary" type="button">关闭迷你窗</button>
+    </div>
+  </main>
+  <script>
+    const title = document.getElementById('title');
+    const host = document.getElementById('host');
+    const phase = document.getElementById('phase');
+    const duration = document.getElementById('duration');
+    const tokens = document.getElementById('tokens');
+    const fresh = document.getElementById('fresh');
+    function paint(snapshot) {
+      const task = snapshot?.taskState || {};
+      const metrics = snapshot?.metrics || {};
+      if (title.firstElementChild) {
+        title.firstElementChild.textContent = metrics.targetTitle || '没有选中的宿主窗口';
+      }
+      host.textContent = metrics.connectionStatus ? '连接：' + metrics.connectionStatus : '没有宿主连接';
+      phase.textContent = '阶段：' + (task.phase || '—');
+      duration.textContent = '任务耗时：' + (task.observedSeconds == null ? '—' : task.observedSeconds + ' 秒');
+      const tokenText = metrics.totalTokens == null ? '—' : String(metrics.totalTokens);
+      const provenanceText = metrics.provenance === 'fixture' ? '（测试模拟数据）' : (metrics.provenance ? '（真实数据）' : '');
+      tokens.textContent = 'Token：' + tokenText + provenanceText;
+      fresh.textContent = metrics.isStale ? '数据已过期' : (metrics.lastUpdated ? '更新于 ' + metrics.lastUpdated : '尚无更新时间');
+    }
+    document.getElementById('open').onclick = () => window.antiFaceMini.openMain();
+    document.getElementById('close').onclick = () => window.antiFaceMini.dismiss();
+    window.antiFaceMini.snapshot().then(paint).catch(() => { host.textContent = '状态暂时读不到，窗口仍可关闭。'; });
+    window.antiFaceMini.onUpdate(paint);
+  </script>
+</body>
+</html>

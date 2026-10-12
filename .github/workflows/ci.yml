@@ -1,0 +1,18 @@
+name: Validate
+on:
+  push:
+  pull_request:
+jobs:
+  build-and-test:
+    # The app and its process/lock tests target Windows only.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Render regression tests launch headless Chromium through Playwright.
+      - run: npx playwright install chromium
+      - run: npm run check

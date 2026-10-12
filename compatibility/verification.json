@@ -1,0 +1,37 @@
+{
+  "verifiedAt": "2026-10-04T05:37:04.064Z",
+  "platform": "win32",
+  "version": "2.19.1.0",
+  "fingerprint": "341234faf45bd1776fd5418a3c288dedc5487ebfcf153f53d75de17cfe15c1de",
+  "themesTested": [
+    "graphite",
+    "pearl",
+    "aurora",
+    "midnight",
+    "matcha",
+    "rose",
+    "nord",
+    "latte",
+    "violet",
+    "ocean",
+    "sunset",
+    "ink",
+    "sakura",
+    "forest",
+    "silver"
+  ],
+  "checks": [
+    "DOM structure",
+    "CSS variable application",
+    "one owned style only",
+    "wallpaper visible through shell",
+    "blur and radius computed styles",
+    "heartbeat",
+    "original variables and style count restored"
+  ],
+  "limitations": [
+    "Current main window only",
+    "No persistence across host reload",
+    "Visual fidelity outside main page not exhaustively verified"
+  ]
+}

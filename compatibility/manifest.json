@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "adapters": [
+    {
+      "id": "antigravity-desktop-v2",
+      "product": "Antigravity Desktop",
+      "platform": "win32",
+      "strategy": "runtime-css",
+      "status": "ready",
+      "verifiedHosts": [
+        {
+          "version": "2.19.1.0",
+          "fingerprint": "341234faf45bd1776fd5418a3c288dedc5487ebfcf153f53d75de17cfe15c1de"
+        }
+      ]
+    }
+  ]
+}

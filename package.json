@@ -1,0 +1,88 @@
+{
+  "name": "anti-face",
+  "version": "0.6.3",
+  "private": true,
+  "description": "Antigravity theme studio for Windows",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "check": "npm run build && npm test",
+    "package": "npm run build && node scripts/package.mjs",
+    "test:desktop": "node scripts/smoke-desktop.cjs",
+    "verify:host": "node scripts/verify-host.cjs",
+    "test:desktop:host": "node scripts/smoke-desktop.cjs --host",
+    "test:desktop:round3": "node scripts/smoke-round3.cjs",
+    "test:desktop:round4": "node scripts/smoke-round4.cjs",
+    "test:round4:fix": "node --test tests/round4-fix.test.cjs",
+    "test:round5": "node --test tests/round5-core.test.cjs tests/round5-services.test.cjs tests/round5-scenarios.test.cjs tests/round5-render.test.cjs",
+    "test:round5:fix": "node --test tests/round5-fix.test.cjs",
+    "test:grok-second": "node --test tests/grok-second-fix.test.cjs",
+    "test:desktop:round5": "node scripts/smoke-round5.cjs",
+    "test:desktop:round5:e2e": "node scripts/smoke-round5-e2e.cjs",
+    "test:round6": "node --test tests/round6-*.test.cjs",
+    "smoke:round6": "node scripts/smoke-round6.cjs",
+    "test:round7": "node --test tests/round7-*.test.cjs",
+    "smoke:round7": "node scripts/smoke-round7.cjs",
+    "smoke:round7:packed": "node scripts/smoke-round7-packed.cjs",
+    "smoke:round7:fix": "node scripts/smoke-round7-fix.cjs",
+    "smoke:round7:fix:packed": "node scripts/smoke-round7-fix-packed.cjs"
+  },
+  "dependencies": {
+    "@jsquash/webp": "1.4.0",
+    "jpeg-js": "0.4.4",
+    "pngjs": "7.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "lucide-react": "1.50.0",
+    "playwright": "1.63.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.2"
+  },
+  "build": {
+    "appId": "local.antiface.studio",
+    "productName": "Anti Face",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "core/**/*",
+      "compatibility/**/*",
+      "assets/**/*",
+      "package.json",
+      "shared/**/*",
+      "node_modules/pngjs/**/*",
+      "node_modules/jpeg-js/**/*",
+      "node_modules/@jsquash/webp/**/*",
+      "node_modules/wasm-feature-detect/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/@jsquash/webp/**/*",
+      "node_modules/wasm-feature-detect/**/*",
+      "assets/sounds/**/*",
+      "desktop/workers/**/*"
+    ],
+    "win": {
+      "target": "portable",
+      "signAndEditExecutable": false
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "author": "Anti Face",
+  "license": "UNLICENSED",
+  "type": "module"
+}

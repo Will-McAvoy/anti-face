@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Anti Face - 快速主题切换</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #181d1a;
+      color: #e5eae6;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #2a352e;
+      border-radius: 12px;
+      user-select: none;
+    }
+    .header {
+      padding: 12px 16px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid #253029;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .title { font-size: 13px; font-weight: 600; color: #8fa595; }
+    .close-btn {
+      background: none;
+      border: none;
+      color: #728478;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .close-btn:hover { background: #232c26; color: #e5eae6; }
+    .target-select {
+      background: #111513;
+      border: 1px solid #2c3831;
+      color: #b8c7be;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      outline: none;
+    }
+    .search-input {
+      width: 100%;
+      background: #111513;
+      border: 1px solid #2c3831;
+      color: #e5eae6;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-input:focus { border-color: #4a775b; }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 8px 16px 4px;
+      background: #141916;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #7a8e81;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #25332a;
+      color: #d1dfd6;
+      font-weight: 600;
+    }
+    .theme-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .theme-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .theme-item:hover, .theme-item.selected {
+      background: #222c25;
+      border-color: #38493d;
+    }
+    .theme-color-pill {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .theme-info { flex: 1; min-width: 0; }
+    .theme-name { font-size: 13px; font-weight: 500; color: #e5eae6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .theme-desc { font-size: 11px; color: #728478; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #1c2520;
+      color: #8da394;
+    }
+    .footer {
+      padding: 8px 16px;
+      border-top: 1px solid #253029;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #637569;
+    }
+    .conflict-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 14, 12, 0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 50;
+    }
+    .conflict-box {
+      background: #1f2722;
+      border: 1px solid #3d4f43;
+      border-radius: 10px;
+      padding: 16px;
+      max-width: 320px;
+      text-align: center;
+    }
+    .conflict-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #e5eae6; }
+    .conflict-desc { font-size: 12px; color: #9ab0a2; margin-bottom: 16px; }
+    .conflict-actions { display: flex; gap: 8px; justify-content: center; }
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-save { background: #3c7751; color: #fff; }
+    .btn-discard { background: #683030; color: #fff; }
+    .btn-cancel { background: #2c3630; color: #ccd9d1; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="top-bar">
+      <span class="title">Anti Face 快速切换</span>
+      <select id="targetSelect" class="target-select"></select>
+      <button id="closeBtn" class="close-btn" title="关闭 (Esc)">✕</button>
+    </div>
+    <input type="text" id="searchInput" class="search-input" placeholder="搜索主题名称或风格… (↑↓选择, Enter应用)" autofocus>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="all">全部</button>
+    <button class="tab-btn" data-tab="fav">收藏</button>
+    <button class="tab-btn" data-tab="recent">最近使用</button>
+  </div>
+
+  <div id="themeList" class="theme-list"></div>
+
+  <div class="footer">
+    <span id="statusText">就绪</span>
+    <span>Enter 应用 · Esc 关闭</span>
+  </div>
+
+  <div id="conflictModal" class="conflict-modal">
+    <div class="conflict-box">
+      <div class="conflict-title">有未保存的草稿</div>
+      <div class="conflict-desc">当前窗口正在试穿或有未提交的编辑，请选择如何处理：</div>
+      <div class="conflict-actions">
+        <button id="conflictSave" class="btn btn-save">保存并切换</button>
+        <button id="conflictDiscard" class="btn btn-discard">放弃草稿</button>
+        <button id="conflictCancel" class="btn btn-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let state = {
+      targets: [],
+      selectedTargetId: null,
+      themes: [],
+      favorites: [],
+      recent: [],
+      activeTab: 'all',
+      query: '',
+      selectedIndex: 0,
+      pendingThemeId: null
+    };
+
+    const searchInput = document.getElementById('searchInput');
+    const targetSelect = document.getElementById('targetSelect');
+    const themeList = document.getElementById('themeList');
+    const statusText = document.getElementById('statusText');
+    const closeBtn = document.getElementById('closeBtn');
+    const conflictModal = document.getElementById('conflictModal');
+
+    function getFilteredThemes() {
+      let list = state.themes;
+      if (state.activeTab === 'fav') {
+        const favIds = new Set(state.favorites.map(f => f.id || f));
+        list = list.filter(t => favIds.has(t.id));
+      } else if (state.activeTab === 'recent') {
+        const recIds = new Set(state.recent.map(r => r.id || r));
+        list = list.filter(t => recIds.has(t.id));
+      }
+      if (state.query.trim()) {
+        const q = state.query.toLowerCase().trim();
+        list = list.filter(t => (t.name || '').toLowerCase().includes(q) || (t.preset || '').toLowerCase().includes(q) || (t.tags || []).some(tag => (tag || '').toLowerCase().includes(q)));
+      }
+      return list;
+    }
+
+    function renderList() {
+      const filtered = getFilteredThemes();
+      if (state.selectedIndex >= filtered.length) {
+        state.selectedIndex = Math.max(0, filtered.length - 1);
+      }
+      themeList.innerHTML = '';
+      if (filtered.length === 0) {
+        themeList.innerHTML = '<div style="padding: 24px; text-align: center; color: #5a6e61; font-size: 13px;">无匹配主题</div>';
+        return;
+      }
+      filtered.forEach((t, idx) => {
+        const item = document.createElement('div');
+        item.className = 'theme-item' + (idx === state.selectedIndex ? ' selected' : '');
+        const color = t.document?.colors?.accent || t.accent || '#4ade80';
+        item.innerHTML = `
+          <div class="theme-color-pill" style="background: ${color};"></div>
+          <div class="theme-info">
+            <div class="theme-name">${t.name}</div>
+            <div class="theme-desc">${t.preset || '内置精选'}</div>
+          </div>
+          ${t.favorite ? '<span class="tag">★ 收藏</span>' : ''}
+        `;
+        item.addEventListener('click', () => {
+          state.selectedIndex = idx;
+          applySelected();
+        });
+        themeList.appendChild(item);
+      });
+
+      const selectedEl = themeList.children[state.selectedIndex];
+      if (selectedEl) selectedEl.scrollIntoView({ block: 'nearest' });
+    }
+
+    function renderTargets() {
+      targetSelect.innerHTML = '';
+      if (!state.targets || state.targets.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '未检测到窗口';
+        targetSelect.appendChild(opt);
+        return;
+      }
+      state.targets.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = t.title ? (t.title.slice(0, 24) + (t.title.length > 24 ? '…' : '')) : t.id;
+        opt.selected = t.id === state.selectedTargetId;
+        targetSelect.appendChild(opt);
+      });
+    }
+
+    async function applySelected() {
+      const filtered = getFilteredThemes();
+      const theme = filtered[state.selectedIndex];
+      if (!theme) return;
+      if (!state.selectedTargetId) {
+        statusText.textContent = '请先选择目标窗口';
+        return;
+      }
+
+      statusText.textContent = `正在应用：${theme.name}…`;
+      try {
+        const res = await window.quickSwitcher.applyTheme(theme.id, state.selectedTargetId);
+        if (res?.conflict) {
+          state.pendingThemeId = theme.id;
+          state.pendingTargetId = state.selectedTargetId;
+          conflictModal.style.display = 'flex';
+          return;
+        }
+        if (res?.ok) {
+          statusText.textContent = `已成功应用：${theme.name}`;
+          setTimeout(() => window.quickSwitcher.close(), 300);
+        } else {
+          statusText.textContent = res?.message || '应用未生效';
+        }
+      } catch (err) {
+        statusText.textContent = `应用失败: ${err.message}`;
+      }
+    }
+
+    // 事件绑定
+    searchInput.addEventListener('input', e => {
+      state.query = e.target.value;
+      state.selectedIndex = 0;
+      renderList();
+    });
+
+    searchInput.addEventListener('keydown', e => {
+      const filtered = getFilteredThemes();
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        state.selectedIndex = Math.min(filtered.length - 1, state.selectedIndex + 1);
+        renderList();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        state.selectedIndex = Math.max(0, state.selectedIndex - 1);
+        renderList();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        applySelected();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        window.quickSwitcher.close();
+      }
+    });
+
+    targetSelect.addEventListener('change', async e => {
+      state.selectedTargetId = e.target.value;
+      await window.quickSwitcher.selectTarget(state.selectedTargetId);
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeTab = btn.dataset.tab;
+        state.selectedIndex = 0;
+        renderList();
+      });
+    });
+
+    closeBtn.addEventListener('click', () => window.quickSwitcher.close());
+
+    async function resolvePending(choice) {
+      try {
+        const result=await window.quickSwitcher.resolveConflict(choice,state.pendingTargetId);
+        if(!result?.ok){statusText.textContent=result?.message || '冲突未解决，请重试';return;}
+        conflictModal.style.display='none';
+        const themeId=result.themeId || state.pendingThemeId;
+        const targetId=result.targetId || state.pendingTargetId;
+        if(themeId){const applied=await window.quickSwitcher.applyTheme(themeId,targetId);statusText.textContent=applied?.ok?'主题已应用':applied?.message || '主题未生效';if(applied?.ok)window.quickSwitcher.close();}
+      } catch(error){statusText.textContent=error.message;}
+    }
+    document.getElementById('conflictSave').addEventListener('click',()=>resolvePending('save'));
+    document.getElementById('conflictDiscard').addEventListener('click',()=>resolvePending('discard'));
+    document.getElementById('conflictCancel').addEventListener('click', () => {
+      conflictModal.style.display = 'none';
+      statusText.textContent = '已取消切换';
+    });
+
+    // 初始化
+    window.quickSwitcher.init().then(data => {
+      if (data) {
+        state.targets = data.targets || [];
+        state.selectedTargetId = data.selectedTargetId || (state.targets[0]?.id || null);
+        state.themes = data.themes || [];
+        state.favorites = data.favorites || [];
+        state.recent = data.recentThemes || [];
+        renderTargets();
+        renderList();
+      }
+    });
+  </script>
+</body>
+</html>

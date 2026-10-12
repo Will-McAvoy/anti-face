@@ -1,0 +1,284 @@
+.preview {
+  height: 405px;
+  border: 1px solid #ffffff18;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  color: var(--preview-fg);
+  box-shadow: 0 10px 35px #0002;
+  position: relative;
+}
+
+.preview-title {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 13px;
+  font-size: 9px;
+  color: var(--preview-muted);
+  background: color-mix(in srgb, var(--preview-panel) var(--preview-opacity), transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--preview-fg) 8%, transparent);
+  backdrop-filter: blur(var(--preview-blur));
+}
+
+.window-dots {
+  display: flex;
+  gap: 4px;
+  width: 65px;
+}
+
+.window-dots i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--preview-muted);
+  opacity: .3;
+}
+
+.preview-tag {
+  font-size: 8px;
+  width: 65px;
+  text-align: right;
+}
+
+.preview-body {
+  display: flex;
+  height: calc(100% - 32px);
+}
+
+.preview-sidebar {
+  width: 155px;
+  flex-shrink: 0;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--preview-panel) var(--preview-sidebar-opacity, var(--preview-opacity)), transparent);
+  backdrop-filter: blur(var(--preview-sidebar-blur, var(--preview-blur)));
+  border-right: 1px solid color-mix(in srgb, var(--preview-fg) 8%, transparent);
+  border-radius: var(--preview-sidebar-radius, 0);
+}
+
+.preview-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  padding: 0 3px;
+  margin-bottom: 19px;
+}
+
+.preview-brand > svg:first-child {
+  color: var(--preview-accent);
+}
+
+.preview-brand > svg:last-child {
+  margin-left: auto;
+}
+
+.preview-nav {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  color: var(--preview-muted);
+  padding: 8px;
+  border-radius: var(--preview-radius);
+}
+
+.preview-nav.active {
+  color: var(--preview-accent);
+  background: color-mix(in srgb, var(--preview-accent) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--preview-accent) 10%, transparent);
+  margin-bottom: 4px;
+}
+
+.preview-sidebar > small {
+  color: var(--preview-muted);
+  font-size: 8px;
+  margin: 17px 8px 7px;
+  opacity: .7;
+}
+
+.preview-nav.indent {
+  font-size: 8px;
+  padding-left: 15px;
+}
+
+.preview-profile {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding: 8px;
+  font-size: 9px;
+}
+
+.preview-profile > span {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--preview-accent) 18%, transparent);
+  color: var(--preview-accent);
+}
+
+.preview-profile small {
+  display: block;
+  color: var(--preview-muted);
+  font-size: 7px;
+  margin-top: 3px;
+}
+
+.preview-main {
+  flex: 1;
+  min-width: 0;
+  padding: 35px 27px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: color-mix(in srgb, var(--preview-panel) var(--preview-chat-opacity, var(--preview-opacity)), transparent);
+  backdrop-filter: blur(var(--preview-chat-blur, var(--preview-blur)));
+}
+
+.preview-greeting {
+  text-align: center;
+}
+
+.greeting-symbol {
+  font-size: 34px;
+  color: var(--preview-accent);
+  line-height: 1;
+}
+
+.preview-greeting h2 {
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: -.5px;
+  margin: 13px 0 8px;
+}
+
+.preview-greeting p {
+  font-size: 9px;
+  color: var(--preview-muted);
+  margin: 0;
+}
+
+.preview-prompts {
+  display: flex;
+  gap: 10px;
+  margin-top: 23px;
+  width: 100%;
+  max-width: 390px;
+}
+
+.preview-prompts > div,
+.preview-card-item {
+  flex: 1;
+  border: 1px solid color-mix(in srgb, var(--preview-fg) 10%, transparent);
+  background: color-mix(in srgb, var(--preview-panel) var(--preview-card-opacity, var(--preview-opacity)), transparent);
+  backdrop-filter: blur(var(--preview-card-blur, var(--preview-blur)));
+  border-radius: var(--preview-card-radius, var(--preview-radius));
+  padding: 12px;
+}
+
+.preview-prompts svg,
+.preview-card-item svg {
+  color: var(--preview-accent);
+}
+
+.preview-prompts b,
+.preview-card-item b {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  margin: 7px 0 5px;
+}
+
+.preview-prompts span,
+.preview-card-item span {
+  color: var(--preview-muted);
+  font-size: 8px;
+}
+
+.preview-composer {
+  border-radius: var(--preview-composer-radius, var(--preview-radius));
+  border: 1px solid color-mix(in srgb, var(--preview-fg) 16%, transparent);
+  background: color-mix(in srgb, var(--preview-panel) var(--preview-composer-opacity, var(--preview-opacity)), transparent);
+  backdrop-filter: blur(var(--preview-composer-blur, var(--preview-blur)));
+  padding: 13px;
+  margin-top: auto;
+  width: 100%;
+  max-width: 430px;
+}
+
+.preview-composer > span {
+  font-size: 9px;
+  color: var(--preview-muted);
+}
+
+.preview-composer > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 17px;
+  color: var(--preview-muted);
+  font-size: 8px;
+}
+
+.preview-composer > div > span {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.preview-composer i {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  background: var(--preview-accent);
+  color: var(--preview-bg);
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+.preview-footnote {
+  font-size: 7px;
+  color: var(--preview-muted);
+  margin-top: 9px;
+  opacity: .7;
+}
+
+@media (min-width: 1600px) {
+  .preview { height: 430px; }
+  .preview-main { padding-top: 40px; }
+}
+
+@media (max-width: 1200px) {
+  .preview-sidebar { width: 118px; padding: 13px 6px; }
+  .preview-main { padding: 32px 15px 14px; }
+  .preview-brand { font-size: 8px; }
+  .preview-greeting h2 { font-size: 16px; }
+  .preview-prompts { gap: 7px; }
+  .preview-prompts > div { padding: 9px; }
+}
+
+@media (max-width: 650px) {
+  .preview { height: 360px; }
+  .preview-sidebar { width: 100px; padding: 10px 3px; }
+  .preview-brand { font-size: 7px; }
+  .preview-main { padding: 27px 12px 12px; }
+  .preview-greeting h2 { font-size: 13px; }
+  .preview-greeting p { font-size: 8px; }
+  .preview-prompts > div { padding: 8px; }
+  .preview-prompts span { display: none; }
+  .preview-nav { font-size: 8px; padding: 7px 4px; }
+  .preview-nav.indent { font-size: 7px; padding-left: 6px; }
+  .preview-nav svg { width: 11px; }
+  .preview-greeting { width: 100%; }
+}

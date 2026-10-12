@@ -1,0 +1,12 @@
+import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+const require = createRequire(import.meta.url);
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const env = { ...process.env, ELECTRON_BUILDER_CACHE: path.join(root, 'artifacts', 'builder-cache') };
+if (env.HTTP_PROXY || env.HTTPS_PROXY) env.NODE_USE_ENV_PROXY = '1';
+delete env.ELECTRON_RUN_AS_NODE;
+const child = spawn(process.execPath, [require.resolve('electron-builder/cli.js'), '--win', 'portable'], { cwd: root, env, stdio: 'inherit', windowsHide: true });
+child.on('error', error => { console.error(error); process.exitCode = 1; });
+child.on('exit', code => { process.exitCode = code ?? 1; });
