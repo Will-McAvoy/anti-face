@@ -178,3 +178,7 @@ anti_face/
 - 构建产物（`release/`、`dist/`）和测试日志（`artifacts/`）都不提交到仓库。旧报告里指向这些目录的链接只在本地构建后有效。
 - **0.6.3 本地构建**：`release/Anti Face 0.6.3.exe`，178,680,691 字节，SHA256 `0e38fe84b3328252b2edac8c4f39c9652f2d40f52c72b17946bb0a8698777b38`。自行构建的哈希会不同。
 - **签名状态**：本地便携版，未配置商业代码签名证书。
+
+## 许可证
+
+本项目采用 [MIT License](LICENSE)，Copyright (c) 2026 Will-McAvoy。
