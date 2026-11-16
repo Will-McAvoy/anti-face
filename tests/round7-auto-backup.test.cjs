@@ -183,6 +183,8 @@ test('F05: 严格保留策略与非相关文件隔离保护', async () => {
 
   const mockStudio = { userData, safeMode: false, migrationActive: false };
   const service = new AutoBackupService(mockStudio, {
+    // Keep these fixtures within retainDays so this case tests count-based pruning.
+    now: () => Date.parse('2026-10-06T10:00:00Z'),
     config: { enabled: true, directoryRef: backupDir, retainCount: 2, retainDays: 30 }
   });
   // Ownership comes from the service index, never from a matching filename.
